@@ -2,131 +2,95 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lieyan 的个人空间</title>
     <style>
         body {
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            background-color: #1a1a1a;
+            color: white;
             font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f0f0f0;
-            transition: filter 0.3s ease;
-        }
-
-        body.active {
-            position: relative;
-        }
-
-        body.active::after {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1;
-        }
-
-        header {
             text-align: center;
-            padding: 40px 0;
-            position: relative;
-            z-index: 2;
+            transition: 0.5s filter;
         }
 
-        .main-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: relative;
-            z-index: 2;
-        }
-
-        .links-section {
-            margin-top: 30px;
-        }
-
-        .link-button {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 45%;
-            height: 60px;
-            margin: 10px;
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            text-decoration: none;
-            color: #333;
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 3;
-        }
-
-        .link-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            z-index: 4;
+        h1 {
+            margin-bottom: 50px;
+            font-size: 2.5em;
         }
 
         .links-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
+            max-width: 600px;
+            margin: 0 auto 100px;
+        }
+
+        .link-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            margin: 20px;
+            padding: 20px;
+            transition: all 0.5s;
+        }
+
+        .link-item a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+            display: block;
+            transition: transform 0.3s;
+        }
+
+        .link-item:hover {
+            filter: brightness(1.2);
+        }
+
+        .link-item:hover a {
+            transform: scale(1.5);
+        }
+
+        .links-container:hover .link-item:not(:hover) {
+            filter: blur(4px) brightness(0.5);
         }
 
         footer {
-            text-align: center;
-            padding: 30px 0;
-            color: #666;
-            margin-top: 40px;
-            position: relative;
-            z-index: 2;
+            margin-top: 80px;
+            padding: 20px;
+            line-height: 1.6;
         }
 
-        /* 模糊效果 */
-        body.active .main-content:not(:hover),
-        body.active header:not(:hover),
-        body.active footer:not(:hover) {
-            filter: blur(10px);
+        footer a {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        footer a:hover {
+            transform: scale(1.3);
+            background: rgba(255, 255, 255, 0.2);
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Lieyan 的个人空间</h1>
-    </header>
-
-    <div class="main-content">
-        <div class="links-section">
-            <h2>个人链接</h2>
-            <div class="links-container">
-                <a href="https://space.bilibili.com/687731566" class="link-button" target="_blank" 
-                   onmouseenter="document.body.classList.add('active')" 
-                   onmouseleave="document.body.classList.remove('active')">
-                    📺 Bilbil 
-                </a>
-                <a href="https://fanqienovel.com/author-page/3244024389706810-7412638058287207705" class="link-button" target="_blank"
-                   onmouseenter="document.body.classList.add('active')" 
-                   onmouseleave="document.body.classList.remove('active')">
-                    📖 番茄小说
-                </a>
-            </div>
+    <h1>Lieyan 的个人空间</h1>
+    
+    <div class="links-container">
+        <div class="link-item">
+            <a href="https://space.bilibili.com/687731566" target="_blank">📺 bilbil 主页</a>
+        </div>
+        <div class="link-item">
+            <a href="https://fanqienovel.com/author-page/3244024389706810-7412638058287207705" target="_blank">📖 番茄小说</a>
         </div>
     </div>
 
     <footer>
         <p>给岁月以文明，给时光以生命。</p>
+        <a href="https://github.com/Lieyan163" target="_blank">GitHub</a>
     </footer>
-
-    <script>
-        // 自动移除移动端hover效果
-        if (window.innerWidth < 768) {
-            document.body.classList.remove('active');
-        }
-    </script>
 </body>
 </html>
