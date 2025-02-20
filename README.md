@@ -95,11 +95,11 @@
         
         <div class="links-section">
             <div class="link-item" onclick="window.open('https://space.bilibili.com/687731566')">
-                <h2>哔哩哔哩</h2>
+                <h2>📺哔哩哔哩</h2>
             </div>
             
             <div class="link-item" onclick="window.open('https://fanqienovel.com/author-page/3244024389706810-7412638058287207705')">
-                <h2>番茄小说</h2>
+                <h2>📖番茄小说</h2>
             </div>
         </div>
 
