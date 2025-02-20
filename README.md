@@ -167,15 +167,6 @@ lieyan.github.io
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-    
-     // 背景变暗控制
-        document.querySelectorAll('.link-item').forEach(item => {
-            item.addEventListener('mouseover', () => {
-                document.querySelector('.overlay').style.background = 'rgba(0,0,0,0.3)';
-            });
-            item.addEventListener('mouseout', () => {
-                document.querySelector('.overlay').style.background = 'rgba(0,0,0,0)';
-            });
         });
     </script>
 </body>
