@@ -161,7 +161,14 @@ lieyan.github.io
         }
 
         animate();
-         // 背景变暗控制
+        
+
+        // 窗口大小调整
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+    
+     // 背景变暗控制
         document.querySelectorAll('.link-item').forEach(item => {
             item.addEventListener('mouseover', () => {
                 document.querySelector('.overlay').style.background = 'rgba(0,0,0,0.3)';
@@ -169,13 +176,6 @@ lieyan.github.io
             item.addEventListener('mouseout', () => {
                 document.querySelector('.overlay').style.background = 'rgba(0,0,0,0)';
             });
-        });
-
-
-        // 窗口大小调整
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
         });
     </script>
 </body>
