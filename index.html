@@ -4,13 +4,49 @@
     <meta charset="UTF-8">
     <title>Lieyan 的个人空间</title>
     <style>
+        :root {
+            --blur-intensity: 10px;
+            --brightness-value: 0.5;
+            --transition-time: 0.5s;
+        }
+
         body {
             margin: 0;
             min-height: 100vh;
-            background: white;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             overflow-x: hidden;
+            background: url('https://wallpaperm.cmcm.com/da915804aeab435636dd9bd1c9b39722.jpg') center/cover fixed;
+            position: relative;
             transition: background 0.5s;
+        }
+
+        /* 背景遮罩层 */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+        }
+
+        .blur-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(0px);
+            transition: all var(--transition-time) cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .blur-active .blur-overlay {
+            backdrop-filter: blur(12px);
+            background: rgba(0, 0, 0, 0.4);
         }
 
         .container {
@@ -18,88 +54,80 @@
             margin: 0 auto;
             padding: 2rem;
             position: relative;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 3rem;
+            z-index: 2;
         }
 
         .links-section {
             display: grid;
-            gap: 1.5rem;
+            gap: 2rem;
+            perspective: 1200px;
         }
 
         .link-item {
-            padding: 1.5rem;
-            background: linear-gradient(120deg, #f5f5f5, white);
-            border-radius: 12px;
-            transition: all 0.5s;
+            padding: 2rem;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(245, 245, 245, 0.95));
+            border-radius: 16px;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
             cursor: pointer;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            transform: translateZ(0);
             position: relative;
-            z-index: 1;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            filter: blur(var(--blur-intensity)) brightness(var(--brightness-value));
+        }
+
+        /* 3D 边缘按压效果 */
+        .link-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        .link-item:hover::before {
+            opacity: 1;
+            transform: scale(1);
         }
 
         .link-item:hover {
-            transform: scale(1.15);
+            transform: scale(1.1) translateZ(20px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
             z-index: 3;
-            background: linear-gradient(120deg, #e3f2fd, #f0f8ff);
+            filter: blur(0px) brightness(1);
         }
 
-        .darken-background {
-            background: rgba(0,0,0,0.1);
+        /* 放大回弹效果 */
+        .link-item:active {
+            transform: scale(1.05) translateZ(15px);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
         }
 
-        footer {
-            text-align: center;
-            margin-top: 5rem;
-            color: #666;
-            padding: 2rem 0;
-            position: relative;
-            z-index: 2;
-        }
-
-        footer p {
-            margin: 1.2rem 0;
-        }
-
-        #canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .click-effect {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            animation: clickExplode 0.8s ease-out;
-            pointer-events: none;
-        }
-
-        @keyframes clickExplode {
-            0% { transform: scale(0); opacity: 1; }
-            100% { transform: scale(5); opacity: 0; }
-        }
+      
+            /* 其他样式保持不变 */
     </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
+    <div class="blur-overlay"></div>
+    
     <div class="container">
         <h1>Lieyan 的个人空间</h1>
         
         <div class="links-section">
             <div class="link-item" onclick="window.open('https://space.bilibili.com/687731566')">
-                <h2>📺哔哩哔哩</h2>
+                <h2>哔哩哔哩</h2>
             </div>
             
             <div class="link-item" onclick="window.open('https://fanqienovel.com/author-page/3244024389706810-7412638058287207705')">
-                <h2>📖番茄小说</h2>
+                <h2>番茄小说</h2>
             </div>
         </div>
 
@@ -113,28 +141,25 @@
     </div>
 
     <script>
-        // 彩色拖尾效果
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
+        // 增强版粒子系统
         class Particle {
             constructor(x, y) {
                 this.x = x;
                 this.y = y;
                 this.size = Math.random() * 8 + 2;
-                this.speedX = (Math.random() - 0.5) * 5;
-                this.speedY = (Math.random() - 0.5) * 5;
+                this.speedX = (Math.random() - 0.5) * 6;
+                this.speedY = (Math.random() - 0.5) * 6;
                 this.color = `hsl(${Math.random() * 360}, 70%, 60%)`;
                 this.alpha = 1;
+                this.life = 1;
             }
             update() {
                 this.x += this.speedX;
                 this.y += this.speedY;
-                this.alpha -= 0.02;
+                this.alpha -= 0.015;
                 this.size *= 0.96;
-                return this.alpha > 0;
+                this.life -= 0.02;
+                return this.life > 0;
             }
             draw() {
                 ctx.save();
@@ -147,47 +172,68 @@
             }
         }
 
+        // 初始化画布
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
         let particles = [];
+
+        // 动画循环
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach((particle, index) => {
+            particles = particles.filter(particle => {
                 particle.draw();
-                if (!particle.update()) {
-                    particles.splice(index, 1);
-                }
+                return particle.update();
             });
             requestAnimationFrame(animate);
         }
         animate();
 
-        // 鼠标拖尾
+        // 鼠标拖尾效果
         document.addEventListener('mousemove', (e) => {
-            for (let i = 0; i < 3; i++) {
-                particles.push(new Particle(e.clientX, e.clientY));
+            for(let i = 0; i < 4; i++) {
+                particles.push(new Particle(
+                    e.clientX + Math.random()*10-5,
+                    e.clientY + Math.random()*10-5
+                ));
             }
         });
 
         // 点击爆炸效果
         document.addEventListener('click', (e) => {
-            for (let i = 0; i < 20; i++) {
-                const angle = (Math.PI * 2 * i) / 20;
-                const speed = Math.random() * 5 + 2;
-                const clickParticle = new Particle(e.clientX, e.clientY);
-                clickParticle.speedX = Math.cos(angle) * speed;
-                clickParticle.speedY = Math.sin(angle) * speed;
-                clickParticle.size = Math.random() * 6 + 3;
-                particles.push(clickParticle);
+            for(let i = 0; i < 30; i++) {
+                const angle = Math.PI * 2 * i / 30;
+                const speed = Math.random() * 8 + 2;
+                const p = new Particle(e.clientX, e.clientY);
+                p.speedX = Math.cos(angle) * speed;
+                p.speedY = Math.sin(angle) * speed;
+                p.size = Math.random() * 8 + 3;
+                particles.push(p);
             }
         });
 
-        // 悬停效果
+        // 悬停交互系统
+        let activeHover = false;
         document.querySelectorAll('.link-item').forEach(item => {
             item.addEventListener('mouseenter', () => {
-                document.body.classList.add('darken-background');
+                document.body.classList.add('blur-active');
+                activeHover = true;
             });
             item.addEventListener('mouseleave', () => {
-                document.body.classList.remove('darken-background');
+                document.body.classList.remove('blur-active');
+                activeHover = false;
             });
+        });
+
+        // 3D视差效果
+        document.addEventListener('mousemove', (e) => {
+            if(activeHover) {
+                const x = (e.clientX - window.innerWidth/2) * 0.03;
+                const y = (e.clientY - window.innerHeight/2) * 0.03;
+                document.querySelector('.links-section').style.transform = 
+                    `perspective(1200px) rotateY(${x}deg) rotateX(${-y}deg)`;
+            }
         });
     </script>
 </body>
