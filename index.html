@@ -45,7 +45,7 @@
         }
 
         .blur-active .blur-overlay {
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(20px);
             background: rgba(0, 0, 0, 0.4);
         }
 
@@ -63,20 +63,75 @@
             perspective: 1200px;
         }
 
-        .link-item {
-            padding: 2rem;
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(245, 245, 245, 0.95));
-            border-radius: 16px;
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            cursor: pointer;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-            transform: translateZ(0);
-            position: relative;
-            overflow: hidden;
-            filter: blur(var(--blur-intensity)) brightness(var(--brightness-value));
-        }
+.link-item {
+    padding: 2rem;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(245, 245, 245, 0.95));
+    border-radius: 16px;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    transform: translateZ(0);
+    position: relative;
+    overflow: hidden;
+    filter: brightness(var(--brightness-value));
+}
 
-        /* 3D 边缘按压效果 */
+
+.link-item:hover {
+    transform: scale(1.1) translateZ(20px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    z-index: 3;
+    filter: blur(0px) brightness(1); 
+}
+
+
+.blur-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(0px); 
+    transition: all var(--transition-time) cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.blur-active .blur-overlay {
+    backdrop-filter: blur(12px); 
+    background: rgba(0, 0, 0, 0.4);
+}document.querySelectorAll('.link-item').forEach(item => {
+    item.addEventListener('click', () => {
+    
+        document.querySelectorAll('.link-item').forEach(link => {
+            link.classList.remove('active');
+        });
+        
+     
+        item.classList.add('active');
+        
+       
+        document.body.classList.add('blur-active');
+    });
+
+    item.addEventListener('mouseenter', () => {
+     
+        if (!item.classList.contains('active')) {  
+            document.body.classList.add('blur-active');
+        }
+    });
+
+    item.addEventListener('mouseleave', () => {
+   
+        if (![...document.querySelectorAll('.link-item')].some(item => item.classList.contains('active'))) {
+            document.body.classList.remove('blur-active');
+        }
+    });
+});
+
+ 
+
+     
         .link-item::before {
             content: '';
             position: absolute;
@@ -91,11 +146,7 @@
             transform: scale(0.95);
         }
 
-        .link-item:hover::before {
-            opacity: 1;
-            transform: scale(1);
-        }
-
+  
         .link-item:hover {
             transform: scale(1.1) translateZ(20px);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
@@ -103,7 +154,7 @@
             filter: blur(0px) brightness(1);
         }
 
-        
+    
         .link-item:active {
             transform: scale(1.05) translateZ(15px);
             box-shadow: 0 10px 35px rgba(0, 0, 0, 0.3);
@@ -111,7 +162,7 @@
         }
 
       
-           
+        
     </style>
 </head>
 <body>
@@ -123,15 +174,16 @@
         
         <div class="links-section">
             <div class="link-item" onclick="window.open('https://space.bilibili.com/687731566')">
-                <h2>🎞️📺哔哩哔哩</h2>
+                <h2>哔哩哔哩</h2>
             </div>
             
             <div class="link-item" onclick="window.open('https://fanqienovel.com/author-page/3244024389706810-7412638058287207705')">
-                <h2>📖📚番茄小说</h2>
+                <h2>番茄小说</h2>
             </div>
         </div>
-            <div class="link-item" onclick="window.open('https://lieyan163.github.io/NO-/')">
-                <h2>❌无聊按钮</h2>
+	
+	 <div class="link-item" onclick="window.open('https://lieyan163.github.io/NO-/')">
+                <h2>无聊按钮</h2>
             </div>
         </div>
 
@@ -141,6 +193,12 @@
             <p onclick="window.open('https://github.com/Lieyan163')" 
                style="cursor: pointer; color: #666; margin-top: 1.5rem;">
                 GitHub
+	 	<p onclick="window.open('https://qm.qq.com/q/92zmnf0xmo')" 
+               style="cursor: pointer; color: #EF7D31; margin-top: 1.5rem;font-size: 20px;font-weight: bold;">
+		
+               加入群聊：煊铭的小窝
+		
+
             </p>
         </footer>
     </div>
@@ -184,7 +242,7 @@
         canvas.height = window.innerHeight;
         let particles = [];
 
-       
+      
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles = particles.filter(particle => {
@@ -197,7 +255,7 @@
 
      document.addEventListener('mousemove', (e) => {
         const offsetX = window.pageXOffset;
-        const offsetY = window.pageYOffset;
+        const offsetY = window.pageYOffset; 
         for (let i = 0; i < 4; i++) {
             particles.push(new Particle(
                 e.clientX + Math.random() * 10 - 5 + offsetX, 
@@ -206,10 +264,10 @@
         }
     });
 
-
+   
     document.addEventListener('click', (e) => {
-        const offsetX = window.pageXOffset; 
-        const offsetY = window.pageYOffset;
+        const offsetX = window.pageXOffset;
+        const offsetY = window.pageYOffset; 
         for (let i = 0; i < 30; i++) {
             const angle = Math.PI * 2 * i / 30;
             const speed = Math.random() * 8 + 2;
@@ -221,7 +279,7 @@
             }
         });
 
-       
+     
         let activeHover = false;
         document.querySelectorAll('.link-item').forEach(item => {
             item.addEventListener('mouseenter', () => {
@@ -234,7 +292,7 @@
             });
         });
 
-      
+     
         document.addEventListener('mousemove', (e) => {
             if(activeHover) {
                 const x = (e.clientX - window.innerWidth/2) * 0.03;
