@@ -20,7 +20,7 @@
             transition: background 0.5s;
         }
 
-        /* 背景遮罩111层 */
+        /* 背景遮罩层 */
         body::after {
             content: '';
             position: fixed;
@@ -190,26 +190,29 @@
         }
         animate();
 
-        // 鼠标拖尾效果
-        document.addEventListener('mousemove', (e) => {
-            for(let i = 0; i < 4; i++) {
-                particles.push(new Particle(
-                    e.clientX + Math.random()*10-5,
-                    e.clientY + Math.random()*10-5
-                ));
-            }
-        });
+     document.addEventListener('mousemove', (e) => {
+        const offsetX = window.pageXOffset; // 获取页面水平滚动距离
+        const offsetY = window.pageYOffset; // 获取页面垂直滚动距离
+        for (let i = 0; i < 4; i++) {
+            particles.push(new Particle(
+                e.clientX + Math.random() * 10 - 5 + offsetX, // 修正鼠标位置
+                e.clientY + Math.random() * 10 - 5 + offsetY  // 修正鼠标位置
+            ));
+        }
+    });
 
-        // 点击爆炸效果
-        document.addEventListener('click', (e) => {
-            for(let i = 0; i < 30; i++) {
-                const angle = Math.PI * 2 * i / 30;
-                const speed = Math.random() * 8 + 2;
-                const p = new Particle(e.clientX, e.clientY);
-                p.speedX = Math.cos(angle) * speed;
-                p.speedY = Math.sin(angle) * speed;
-                p.size = Math.random() * 8 + 3;
-                particles.push(p);
+    // 点击爆炸效果
+    document.addEventListener('click', (e) => {
+        const offsetX = window.pageXOffset; // 获取页面水平滚动距离
+        const offsetY = window.pageYOffset; // 获取页面垂直滚动距离
+        for (let i = 0; i < 30; i++) {
+            const angle = Math.PI * 2 * i / 30;
+            const speed = Math.random() * 8 + 2;
+            const p = new Particle(e.clientX + offsetX, e.clientY + offsetY); // 修正鼠标位置
+            p.speedX = Math.cos(angle) * speed;
+            p.speedY = Math.sin(angle) * speed;
+            p.size = Math.random() * 8 + 3;
+            particles.push(p);
             }
         });
 
